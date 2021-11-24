@@ -1,0 +1,37 @@
+from shodan import Shodan
+import json
+import syslog
+
+
+def get_data(banner, field):
+    try:
+        if field == 'hostnames':
+            return banner[field][0]
+        return banner[field]
+    except:
+        return '-'
+
+syslog.openlog(logoption=syslog.LOG_PID, facility=syslog.LOG_SYSLOG)
+syslog.syslog('Starting shodan client.')
+
+
+with open('/root/.config/shodan/api_key') as key:
+	API_KEY = key.readline()
+
+
+json_file = open('log.json','a')
+
+
+api = Shodan(API_KEY)
+for banner in api.stream.alert():
+    timestamp = get_data(banner, 'timestamp')
+    hostname = get_data(banner, 'hostnames')
+    ip = get_data(banner, 'ip_str')
+    port = get_data(banner, 'port')
+    protocol = get_data(banner, 'transport')
+    data = get_data(banner, 'data').replace('\n', ' ').replace('\r', '')
+    fullLog = f'hostname={hostname} ip={ip} port={port} protocol={protocol} data={data}'
+    json_file.write(json.dumps(banner))
+    json_file.write('\n')
+    syslog.syslog(fullLog)
+    print(timestamp ,fullLog)
