@@ -1,6 +1,9 @@
+from typing import NewType
 from shodan import Shodan
+from loggingHelper import logger
 import json
 import syslog
+from repository import Repository, TypeService
 
 
 def get_data(banner, field):
@@ -11,18 +14,22 @@ def get_data(banner, field):
     except:
         return '-'
 
-syslog.openlog(logoption=syslog.LOG_PID, facility=syslog.LOG_SYSLOG)
-syslog.syslog('Starting shodan client.')
+def log_json(jsonFile, content):
+    json_file.write(json.dumps(content))
+    json_file.write('\n')
+
+logger.info('Starting shodan client.')
 
 
 with open('/root/.config/shodan/api_key') as key:
-	API_KEY = key.readline()
-
+    API_KEY = key.readline()
 
 json_file = open('log.json','a')
-
+repo = Repository('ddbb')
+typeService = TypeService()
 
 api = Shodan(API_KEY)
+
 for banner in api.stream.alert():
     timestamp = get_data(banner, 'timestamp')
     hostname = get_data(banner, 'hostnames')
@@ -30,8 +37,11 @@ for banner in api.stream.alert():
     port = get_data(banner, 'port')
     protocol = get_data(banner, 'transport')
     data = get_data(banner, 'data').replace('\n', ' ').replace('\r', '')
-    fullLog = f'hostname={hostname} ip={ip} port={port} protocol={protocol} data={data}'
-    json_file.write(json.dumps(banner))
-    json_file.write('\n')
-    syslog.syslog(fullLog)
-    print(timestamp ,fullLog)
+
+    if repo.is_new_service(ip, port, protocol):
+        repo.add_new_service(ip, port, protocol)
+        logger.info(f'type={typeService.NEW} hostname={hostname} ip={ip} port={port} protocol={protocol} data={data}')
+
+    logger.info(f'type={typeService.type(port)} hostname={hostname} ip={ip} port={port} protocol={protocol} data={data}')
+    
+    log_json(json_file, banner)
