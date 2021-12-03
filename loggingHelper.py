@@ -2,9 +2,10 @@ import logging
 from logging import handlers, Formatter
 from logging.handlers import SysLogHandler
 from syslog import LOG_SYSLOG
+import socket
 
-log_format = '%(asctime)s %(levelname)s Shodan-client[%(process)d]: %(message)s'
-log_format_syslog = 'Shodan-client[%(process)d]: %(message)s'
+log_format = f'%(asctime)s {socket.gethostname()} shodan-client[%(process)d]: %(message)s'
+log_format_syslog = 'shodan-client[%(process)d]: %(message)s'
 log_format_date = '%b %d %H:%M:%S'
 
 logging.basicConfig(
@@ -18,4 +19,3 @@ handler.setFormatter(Formatter(fmt=log_format_syslog))
 
 logger = logging.getLogger()
 logger.addHandler(handler)
-
