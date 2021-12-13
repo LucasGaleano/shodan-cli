@@ -11,7 +11,7 @@ class TypeService():
             self.uncommonPorts = [port.strip() for port in unport.readlines()]
 
     def type(self, port):       
-        if port in self.uncommonPorts:
+        if str(port) in self.uncommonPorts:
             return self.UNCOMMON
         return self.COMMON
 
