@@ -1,0 +1,5 @@
+[Email]
+from = example@example.com
+to = example@example.com
+subject = Subject Testing
+server = server.example.com
