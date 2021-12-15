@@ -1,9 +1,18 @@
-from typing import NewType
 from shodan import Shodan
 from loggingHelper import logger
 import json
-import syslog
 from repository import Repository, TypeService
+from sendMail import send_email_plain
+import argparse
+
+parser = argparse.ArgumentParser(description='Fetch data from Shodan API.')
+parser.add_argument('--email-vulns', action='store_true', help='send the vulnerabilities by email')
+args = parser.parse_args()
+
+
+import configparser
+config = configparser.ConfigParser()
+config.read('config')
 
 
 def get_data(banner, field):
@@ -17,6 +26,21 @@ def get_data(banner, field):
 def log_json(jsonFile, content):
     json_file.write(json.dumps(content))
     json_file.write('\n')
+
+def send_vulns_by_email(banner):
+    message = ''
+    for key, data in banner['vulns'].items():
+        message += key + '\n'
+        message += 'cvss: ' + data['cvss'] +  '\n'
+        message += 'verified: ' + str(data['verified']) +  '\n'
+        message += 'Summary:\n' + data['summary'] +  '\n'
+        message += '\n'
+
+    send_email_plain(config['Email']['from'], 
+                    config['Email']['to'], 
+                    config['Email']['subject'], 
+                    message, 
+                    config['Email']['server'])
 
 logger.info('Starting shodan client.')
 
@@ -44,4 +68,7 @@ for banner in api.stream.alert():
 
     logger.info(f'type={typeService.type(port)} hostname={hostname} ip={ip} port={port} protocol={protocol} data={data}')
     
+    if args.email_vulns and 'vulns' in banner:
+        send_vulns_by_email(banner)
+
     log_json(json_file, banner)
