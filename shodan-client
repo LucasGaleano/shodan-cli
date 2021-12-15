@@ -28,7 +28,14 @@ def log_json(jsonFile, content):
     json_file.write('\n')
 
 def send_vulns_by_email(banner):
+
+    ip = get_data(banner, 'ip_str')
+    port = get_data(banner, 'port')
+    protocol = get_data(banner, 'transport')
+
     message = ''
+    message += f"Service: '{ip} {port}/{protocol}\n"
+
     for key, data in banner['vulns'].items():
         message += key + '\n'
         message += 'cvss: ' + data['cvss'] +  '\n'
