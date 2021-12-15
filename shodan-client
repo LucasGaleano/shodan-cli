@@ -33,6 +33,9 @@ def send_vulns_by_email(banner):
     port = get_data(banner, 'port')
     protocol = get_data(banner, 'transport')
 
+    len(banner['vulns'].items())
+    logger.info(f"Found {len(banner['vulns'].items())} vulnerabilities on {ip} {port}/{protocol}")
+
     message = ''
     message += f"Service: '{ip} {port}/{protocol}\n"
 
