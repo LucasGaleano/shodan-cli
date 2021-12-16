@@ -34,10 +34,10 @@ def send_vulns_by_email(banner):
     protocol = get_data(banner, 'transport')
 
     len(banner['vulns'].items())
-    logger.info(f"Found {len(banner['vulns'].items())} vulnerabilities on {ip} {port}/{protocol}")
+    logger.info(f"Reporting vulnerabilities to {config['Email']['to']}")
 
     message = ''
-    message += f"Service: '{ip} {port}/{protocol}\n"
+    message += f"Service: '{ip} {port}/{protocol}\n\n"
 
     for key, data in banner['vulns'].items():
         message += key + '\n'
@@ -79,6 +79,7 @@ for banner in api.stream.alert():
     logger.info(f'type={typeService.type(port)} hostname={hostname} ip={ip} port={port} protocol={protocol} data={data}')
     
     if args.email_vulns and 'vulns' in banner:
+        logger.info(f"Found {len(banner['vulns'].items())} vulnerabilities on {ip} {port}/{protocol}")
         send_vulns_by_email(banner)
 
     log_json(json_file, banner)
