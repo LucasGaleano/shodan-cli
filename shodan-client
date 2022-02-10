@@ -55,7 +55,7 @@ def send_vulns_by_email(banner):
 logger.info('Starting shodan client.')
 
 
-with open('/root/.config/shodan/api_key') as key:
+with open('./shodan.key') as key:
     API_KEY = key.readline()
 
 json_file = open('log.json','a')
