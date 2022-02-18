@@ -14,9 +14,7 @@ def send_email_html(emailFrom, emailTo, subject, content, mailServer):
     MESSAGE.attach(PLAIN_BODY)
     MESSAGE.attach(HTML_BODY)
 
-    server = SMTP(host=mailServer, port=25)
-    server.connect()
-    
+    server = SMTP(host=mailServer, port=25)    
     
     server.sendmail(emailFrom, emailTo, MESSAGE.as_string())
     server.quit()
@@ -27,9 +25,7 @@ def send_email_plain(emailFrom, emailTo, subject, content, mailServer):
     msg += f"Subject: {subject}\n"
     msg += content
 
-    server = SMTP(host=mailServer, port=25)
-    server.connect()
-    
+    server = SMTP(host=mailServer, port=25)    
     
     server.sendmail(emailFrom, emailTo, msg)
     server.quit()
