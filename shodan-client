@@ -1,3 +1,5 @@
+#! /usr/bin/env python3
+
 from shodan import Shodan
 from loggingHelper import logger
 import json
@@ -56,7 +58,7 @@ logger.info('Starting shodan client.')
 
 
 with open('./shodan.key') as key:
-    API_KEY = key.readline()
+    API_KEY = key.readline().strip('\n')
 
 json_file = open('log.json','a')
 repo = Repository('ddbb')
