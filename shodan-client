@@ -66,22 +66,27 @@ typeService = TypeService()
 
 api = Shodan(API_KEY)
 
-for banner in api.stream.alert():
-    timestamp = get_data(banner, 'timestamp')
-    hostname = get_data(banner, 'hostnames')
-    ip = get_data(banner, 'ip_str')
-    port = get_data(banner, 'port')
-    protocol = get_data(banner, 'transport')
-    data = get_data(banner, 'data').replace('\n', ' ').replace('\r', '')
+while True:
+    try:
+        for banner in api.stream.alert():
+            timestamp = get_data(banner, 'timestamp')
+            hostname = get_data(banner, 'hostnames')
+            ip = get_data(banner, 'ip_str')
+            port = get_data(banner, 'port')
+            protocol = get_data(banner, 'transport')
+            data = get_data(banner, 'data').replace('\n', ' ').replace('\r', '')
 
-    if repo.is_new_service(ip, port, protocol):
-        repo.add_new_service(ip, port, protocol)
-        logger.info(f'type={typeService.NEW} hostname={hostname} ip={ip} port={port} protocol={protocol} data={data}')
+            if repo.is_new_service(ip, port, protocol):
+                repo.add_new_service(ip, port, protocol)
+                logger.info(f'type={typeService.NEW} hostname={hostname} ip={ip} port={port} protocol={protocol} data={data}')
 
-    logger.info(f'type={typeService.type(port)} hostname={hostname} ip={ip} port={port} protocol={protocol} data={data}')
-    
-    if args.email_vulns and 'vulns' in banner:
-        logger.info(f"Found {len(banner['vulns'].items())} vulnerabilities on {ip} {port}/{protocol}")
-        send_vulns_by_email(banner)
+            logger.info(f'type={typeService.type(port)} hostname={hostname} ip={ip} port={port} protocol={protocol} data={data}')
+            
+            if args.email_vulns and 'vulns' in banner:
+                logger.info(f"Found {len(banner['vulns'].items())} vulnerabilities on {ip} {port}/{protocol}")
+                send_vulns_by_email(banner)
 
-    log_json(json_file, banner)
+            log_json(json_file, banner)
+    except Exception as e:
+        print(f"[-] Error: {e}")
+
