@@ -39,7 +39,7 @@ def send_vulns_by_email(banner):
     logger.info(f"Reporting vulnerabilities to {config['Email']['to']}")
 
     message = ''
-    message += f"Service: '{ip} {port}/{protocol}\n\n"
+    message += f"{ip} {port}/{protocol}\n\n"
 
     for key, data in banner['vulns'].items():
         message += key + '\n'
