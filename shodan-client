@@ -14,7 +14,7 @@ args = parser.parse_args()
 
 import configparser
 config = configparser.ConfigParser()
-config.read('config')
+config.read('shodan.conf')
 
 
 def get_data(banner, field):
@@ -36,7 +36,7 @@ def send_vulns_by_email(banner):
     protocol = get_data(banner, 'transport')
 
     len(banner['vulns'].items())
-    logger.info(f"Reporting vulnerabilities to {config['Email']['to']}")
+    logger.info(f"Reporting vulnerabilities to {config['email']['to']}")
 
     message = ''
     message += f"{ip} {port}/{protocol}\n\n"
@@ -48,23 +48,22 @@ def send_vulns_by_email(banner):
         message += 'Summary:\n' + data['summary'] +  '\n'
         message += '\n'
 
-    send_email_plain(config['Email']['from'], 
-                    config['Email']['to'], 
-                    config['Email']['subject'], 
+    send_email_plain(config['email']['from'], 
+                    config['email']['to'], 
+                    config['email']['subject'], 
                     message, 
-                    config['Email']['server'])
+                    config['email']['server'])
 
 logger.info('Starting shodan client.')
 
-
-with open('./shodan.key') as key:
-    API_KEY = key.readline().strip('\n')
+API_KEY = config['shodan']['token']
+api = Shodan(API_KEY)
 
 json_file = open('log.json','a')
 repo = Repository('ddbb')
 typeService = TypeService()
 
-api = Shodan(API_KEY)
+
 
 while True:
     try:

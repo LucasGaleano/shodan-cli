@@ -1,4 +1,7 @@
-[Email]
+[shodan]
+token = tokenKey
+
+[email]
 from = example@example.com
 to = example@example.com
 subject = Subject Testing
