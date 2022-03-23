@@ -83,7 +83,7 @@ while True:
             
             if 'vulns' in banner:
                 for key, data in banner['vulns'].items():
-                    logger.info(f'type=Vulnerability hostname={hostname} ip={ip} port={port} CVE={key} cvss={data["cvss"]} verified={str(data["verified"])} summary={data["summary"]}')
+                    logger.info(f'type=Vulnerability hostname={hostname} ip={ip} port={port} protocol={protocol} CVE={key} cvss={data["cvss"]} verified={str(data["verified"])} summary={data["summary"]}')
 
                     if args.email_vulns:
                         send_vulns_by_email(banner)
