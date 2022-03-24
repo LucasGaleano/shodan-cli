@@ -85,8 +85,8 @@ while True:
                 for key, data in banner['vulns'].items():
                     logger.info(f'type=Vulnerability hostname={hostname} ip={ip} port={port} protocol={protocol} CVE={key} cvss={data["cvss"]} verified={str(data["verified"])} summary={data["summary"]}')
 
-                    if args.email_vulns:
-                        send_vulns_by_email(banner)
+                if args.email_vulns:
+                    send_vulns_by_email(banner)
 
             log_json(json_file, banner)
     except Exception as e:
