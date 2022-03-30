@@ -26,3 +26,13 @@ With the --email-vulns parameters the script will send a vulnerability report to
 
 ## Logging
 The script will log all the events to log.json as a json format and to /var/log/syslog as a syslog format
+
+You should use this config for the logrotate inside /etc/logrotate.d/shodan
+
+```
+/path/to/file/log.json {
+    rotate 5
+    size 1G
+    copytruncate
+}
+```
