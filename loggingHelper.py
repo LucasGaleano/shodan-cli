@@ -1,6 +1,7 @@
 import logging
 from logging import handlers, Formatter
 from logging.handlers import SysLogHandler
+from logging.handlers import RotatingFileHandler
 from syslog import LOG_SYSLOG
 import socket
 

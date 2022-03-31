@@ -34,6 +34,7 @@ def send_vulns_by_email(banner):
     ip = get_data(banner, 'ip_str')
     port = get_data(banner, 'port')
     protocol = get_data(banner, 'transport')
+    hostname =  get_data(banner, 'hostnames')
 
     len(banner['vulns'].items())
     logger.info(f"Reporting vulnerabilities to {config['email']['to']}")
@@ -50,7 +51,7 @@ def send_vulns_by_email(banner):
 
     send_email_plain(config['email']['from'], 
                     config['email']['to'], 
-                    config['email']['subject'], 
+                    config['email']['subject'].replace('{IP}',ip).replace('{DOMAIN}', hostname), 
                     message, 
                     config['email']['server'])
 
@@ -68,6 +69,7 @@ typeService = TypeService()
 while True:
     try:
         for banner in api.stream.alert():
+            # gets all the interesting field
             timestamp = get_data(banner, 'timestamp')
             hostname = get_data(banner, 'hostnames')
             ip = get_data(banner, 'ip_str')
