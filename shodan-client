@@ -18,6 +18,9 @@ config.read('shodan.conf')
 
 
 def get_data(banner, field):
+    """
+    Gets the first item in hostname and if the field didn't exist return a '-'
+    """
     try:
         if field == 'hostnames':
             return banner[field][0]

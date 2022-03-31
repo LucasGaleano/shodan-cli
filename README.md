@@ -10,7 +10,7 @@ token = tokenKey
 [email]
 from = example@example.com
 to = example@example.com
-subject = Subject Testing
+subject = Subject Testing {IP} {DOMAIN}
 server = server.example.com
 ```
 Add the uncommon ports into the file "uncommonPorts"
