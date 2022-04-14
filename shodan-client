@@ -29,8 +29,8 @@ def get_data(banner, field):
         return '-'
 
 def log_json(jsonFile, content):
-    json_file.write(json.dumps(content))
-    json_file.write('\n')
+    jsonFile.write(json.dumps(content))
+    jsonFile.write('\n')
 
 def send_vulns_by_email(banner):
 
